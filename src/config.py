@@ -14,9 +14,9 @@ TAPS_FILE = DATA_PATH / "taps.json"
 PAYS_FILE = DATA_PATH / "pays.csv"
 
 # Logs individuales
-PRINTS_LOG = LOG_PATH / "prints_load.log"
-TAPS_LOG = LOG_PATH / "taps_load.log"
-PAYS_LOG = LOG_PATH / "pays_load.log"
+PRINTS_LOG = LOG_PATH / "prints_load_errors.log"
+TAPS_LOG = LOG_PATH / "taps_load_errors.log"
+PAYS_LOG = LOG_PATH / "pays_load_errors.log"
 
 # Otros parámetros del pipeline
 PRINT_WINDOW_DAYS = 7
