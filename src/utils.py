@@ -2,6 +2,7 @@ import pandas as pd
 import logging
 from pathlib import Path
 from datetime import timedelta
+from config import PRINTS_FILE, TAPS_FILE, PAYS_FILE, PRINTS_LOG, TAPS_LOG, PAYS_LOG
 
 # Creacion del logger
 def setup_logger(name, log_file, level=logging.INFO):
@@ -46,3 +47,20 @@ def load_csv(path, logger):
     except Exception as e:
         logger.error(f"Error al leer CSV: {str(e)}")
         return pd.DataFrame()
+
+
+#Funcion de carga de la data (llama a las funciones de carga de cada archivo).
+def load_data():
+
+    # Iniciar los loggers
+    prints_logger = setup_logger("prints", PRINTS_LOG)
+    taps_logger = setup_logger("taps", TAPS_LOG)
+    pays_logger = setup_logger("pays", PAYS_LOG)
+
+    # Cargar los datos
+    prints = load_json_lines(PRINTS_FILE, prints_logger)
+    taps = load_json_lines(TAPS_FILE, taps_logger)
+    pays = load_csv(PAYS_FILE, pays_logger)
+
+
+    return prints, taps, pays
