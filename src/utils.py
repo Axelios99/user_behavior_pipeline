@@ -3,8 +3,8 @@ import logging
 from pathlib import Path
 from datetime import timedelta
 
+# Creacion del logger
 def setup_logger(name, log_file, level=logging.INFO):
-    """Crea un logger con archivo independiente."""
     Path("logs").mkdir(exist_ok=True)  # Crea carpeta si no existe
     handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -19,9 +19,8 @@ def setup_logger(name, log_file, level=logging.INFO):
 
     return logger
 
-
+#Carga un archivo Json y maneja errores.
 def load_json_lines(path, logger):
-    """Carga un archivo JSON lines y registra líneas problemáticas."""
     valid_rows = []
     try:
         with open(path, 'r', encoding='utf-8') as f:
@@ -39,7 +38,7 @@ def load_json_lines(path, logger):
         logger.error(f"No se pudo abrir el archivo: {str(e)}")
         return pd.DataFrame()
 
-
+#Carga un archivo CSV y maneja errores.
 def load_csv(path, logger):
     """Carga un archivo CSV con manejo de errores."""
     try:
