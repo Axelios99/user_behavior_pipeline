@@ -20,7 +20,7 @@ def setup_logger(name, log_file, level=logging.INFO):
 
     return logger
 
-#Carga un archivo Json y maneja errores.
+#Carga un archivo Json y maneja errores de carga.
 def load_json_lines(path, logger):
     valid_rows = []
     try:
@@ -39,9 +39,8 @@ def load_json_lines(path, logger):
         logger.error(f"No se pudo abrir el archivo: {str(e)}")
         return pd.DataFrame()
 
-#Carga un archivo CSV y maneja errores.
+#Carga un archivo CSV y maneja errores de carga.
 def load_csv(path, logger):
-    """Carga un archivo CSV con manejo de errores."""
     try:
         return pd.read_csv(path)
     except Exception as e:
@@ -52,15 +51,15 @@ def load_csv(path, logger):
 #Funcion de carga de la data (llama a las funciones de carga de cada archivo).
 def load_data():
 
-    # Iniciar los loggers
+    # Iniciar los loggers de la carga de datos.
     prints_logger = setup_logger("prints", PRINTS_LOG)
     taps_logger = setup_logger("taps", TAPS_LOG)
     pays_logger = setup_logger("pays", PAYS_LOG)
 
-    # Cargar los datos
+    # Carga los datos de cada archivo.
     prints = load_json_lines(PRINTS_FILE, prints_logger)
     taps = load_json_lines(TAPS_FILE, taps_logger)
     pays = load_csv(PAYS_FILE, pays_logger)
 
-
+    # Retorna los dataframes cargados.
     return prints, taps, pays
