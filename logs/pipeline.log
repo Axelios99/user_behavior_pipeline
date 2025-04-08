@@ -1,37 +1,37 @@
-2025-04-08 15:00:12,847 - INFO - Iniciando el pipeline de carga de datos...
-2025-04-08 15:00:17,070 - INFO - 
+2025-04-08 15:30:02,504 - INFO - Iniciando el pipeline de carga de datos...
+2025-04-08 15:30:06,042 - INFO - 
 Dataset: PRINTS
 - Columnas: ['day', 'user_id', 'event_data.position', 'event_data.value_prop']
 - Registros: 508617
-- Tiempo de carga: 4.22 seg
+- Tiempo de carga: 3.53 seg
 
-2025-04-08 15:00:17,420 - INFO - 
+2025-04-08 15:30:06,343 - INFO - 
 Dataset: TAPS
 - Columnas: ['day', 'user_id', 'event_data.position', 'event_data.value_prop']
 - Registros: 50859
-- Tiempo de carga: 0.35 seg
+- Tiempo de carga: 0.30 seg
 
-2025-04-08 15:00:19,028 - INFO - 
+2025-04-08 15:30:07,657 - INFO - 
 Dataset: PAYS
 - Columnas: ['pay_date', 'total', 'user_id', 'value_prop']
 - Registros: 756483
-- Tiempo de carga: 1.61 seg
+- Tiempo de carga: 1.31 seg
 
-2025-04-08 15:00:19,029 - INFO - Resumen general de carga de datos:
-2025-04-08 15:00:19,030 - INFO - PRINTS: 508617 filas | 4 columnas
-2025-04-08 15:00:19,030 - INFO - TAPS:   50859 filas | 4 columnas
-2025-04-08 15:00:19,031 - INFO - PAYS:   756483 filas | 4 columnas
-2025-04-08 15:00:19,031 - INFO - Carga de datos completada.
-2025-04-08 15:00:19,637 - INFO - Tiempo de preprocesamiento de PRINTS: 0:00:00.605096
-2025-04-08 15:00:19,704 - INFO - Tiempo de preprocesamiento de TAPS: 0:00:00.067137
-2025-04-08 15:00:20,217 - INFO - Tiempo de preprocesamiento de PAYS: 0:00:00.512033
-2025-04-08 15:00:20,250 - INFO - Preprocesamiento de datos completado.
-2025-04-08 15:00:20,252 - INFO - Último día disponible: 2020-11-30 00:00:00
-2025-04-08 15:00:20,253 - INFO - Ventana de última semana: 2020-11-24 → 2020-11-30
-2025-04-08 15:00:20,253 - INFO - Ventana histórica: 2020-11-03 → 2020-11-23
-2025-04-08 15:00:22,253 - INFO - Enriquecimiento finalizado en: 0:00:02.002753
-2025-04-08 15:00:22,304 - INFO - Enriquecimiento de datos completado.
-2025-04-08 15:00:22,305 - INFO - Exportando datos enriquecidos a output\data_enrich.csv...
-2025-04-08 15:00:22,681 - INFO - CSV exportado correctamente en: output\data_enrich.csv
-2025-04-08 15:00:22,682 - INFO - Exportación completada.
-2025-04-08 15:00:22,682 - INFO - Pipeline de carga de datos finalizado.
+2025-04-08 15:30:07,658 - INFO - Resumen general de carga de datos:
+2025-04-08 15:30:07,658 - INFO - PRINTS: 508617 filas | 4 columnas
+2025-04-08 15:30:07,659 - INFO - TAPS:   50859 filas | 4 columnas
+2025-04-08 15:30:07,659 - INFO - PAYS:   756483 filas | 4 columnas
+2025-04-08 15:30:07,659 - INFO - Carga de datos completada.
+2025-04-08 15:30:08,121 - INFO - Tiempo de preprocesamiento de PRINTS: 0:00:00.461802
+2025-04-08 15:30:08,173 - INFO - Tiempo de preprocesamiento de TAPS: 0:00:00.051648
+2025-04-08 15:30:08,642 - INFO - Tiempo de preprocesamiento de PAYS: 0:00:00.468244
+2025-04-08 15:30:08,674 - INFO - Preprocesamiento de datos completado.
+2025-04-08 15:30:08,677 - INFO - Último día disponible: 2020-11-30 00:00:00
+2025-04-08 15:30:08,677 - INFO - Ventana de última semana: 2020-11-24 → 2020-11-30
+2025-04-08 15:30:08,677 - INFO - Ventana histórica: 2020-11-03 → 2020-11-23
+2025-04-08 15:30:10,260 - INFO - Enriquecimiento finalizado en: 0:00:01.584976
+2025-04-08 15:30:10,300 - INFO - Enriquecimiento de datos completado.
+2025-04-08 15:30:10,301 - INFO - Exportando datos enriquecidos a output\data_enrich.csv...
+2025-04-08 15:30:10,610 - INFO - CSV exportado correctamente en: output\data_enrich.csv
+2025-04-08 15:30:10,611 - INFO - Exportación completada.
+2025-04-08 15:30:10,611 - INFO - Pipeline de carga de datos finalizado.
