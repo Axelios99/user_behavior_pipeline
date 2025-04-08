@@ -1,24 +1,13 @@
-from pipeline import load_data_to_process  # o desde donde la tengas definida
+from pipeline import load_data_to_process
 from utils import setup_logger
+from config import PIPELINE_LOG
 
 if __name__ == "__main__":
-
-    prints, taps, pays = load_data_to_process()
-
-    print("✅ Prints headers:")
-    print(prints.columns)
-    print("✅ Prints data:")
-    print(prints.head())
-    print(f"📄 Total de prints cargados: {len(prints)}\n")
-
-    print("✅ Taps headers:")
-    print(taps.columns)
-    print("✅ Taps data:")
-    print(taps.head())
-    print(f"📄 Total de taps cargados: {len(taps)}\n")
-
-    print("✅ Pays:")
-    print(pays.columns)
-    print("✅ Pays data:")
-    print(pays.head())
-    print(f"📄 Total de pays cargados: {len(pays)}")
+    # Inicia el logger general
+    pipeline_logger = setup_logger("pipeline", PIPELINE_LOG)
+    pipeline_logger.info("Iniciando el pipeline de carga de datos...")
+    
+    #Carga de datos
+    prints, taps, pays = load_data_to_process(pipeline_logger = pipeline_logger)
+    pipeline_logger.info("Carga de datos completada.")
+    

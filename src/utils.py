@@ -5,18 +5,24 @@ import json
 from pathlib import Path
 
 
-# Mejorado: Crear logger con protección contra handlers duplicados
+# Creacion de logger
 def setup_logger(name: str, log_file: str, level=logging.INFO) -> logging.Logger:
     Path("logs").mkdir(exist_ok=True)
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
-    # Solo añadir handler si no hay uno de tipo FileHandler
-    if not any(isinstance(h, logging.FileHandler) for h in logger.handlers):
-        handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+    #Limpiar handlers previos
+    logger.handlers.clear()
+
+    file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+    file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
+
+    console_handler = logging.StreamHandler()
+    console_formatter = logging.Formatter('%(levelname)s - %(message)s')
+    console_handler.setFormatter(console_formatter)
+    logger.addHandler(console_handler)
 
     return logger
 
