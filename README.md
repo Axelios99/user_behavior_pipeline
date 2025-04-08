@@ -2,7 +2,7 @@
 
 Este proyecto consiste en el desarrollo de un pipeline de datos en Python que procesa eventos de interacción de usuarios en la app de MercadoPago.
 
-El objetivo es construir un dataset enriquecido que sirva como base para entrenar un modelo de machine learning que prediga el orden óptimo de las Propuestas de Valor (Value Props) en el carrusel **"Descubrí Más"**.
+El objetivo es construir un dataset enriquecido que sirva como base para entrenar un modelo de machine learning que prediga el orden óptimo de las Propuestas de Valor (Value Props) en el carrusel.
 
 ---
 
