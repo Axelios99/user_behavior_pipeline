@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import logging
 import csv
@@ -74,3 +75,19 @@ def load_csv_lines(path: str, logger: logging.Logger) -> pd.DataFrame:
     except Exception as e:
         logger.error(f"No se pudo abrir el archivo: {str(e)}")
         return pd.DataFrame()
+
+#   Exportar csv
+def export_to_csv(df: pd.DataFrame, output_path: str, logger: logging.Logger) -> None:
+    try:
+        # Crear carpeta destino si no existe
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+        # Exportar a CSV
+        df.to_csv(output_path, index=False, encoding='utf-8')
+
+        # Confirmar éxito
+        logger.info(f"CSV exportado correctamente en: {output_path}")
+
+    except Exception as e:
+        # Log de error si ocurre una excepción
+        logger.error(f"Error al exportar el CSV a '{output_path}': {str(e)}", exc_info=True)

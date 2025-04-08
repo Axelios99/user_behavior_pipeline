@@ -1,24 +1,28 @@
-2025-04-08 10:24:42,602 - INFO - Iniciando el pipeline de carga de datos...
-2025-04-08 10:24:46,077 - INFO - 
+2025-04-08 14:15:00,728 - INFO - Iniciando el pipeline de carga de datos...
+2025-04-08 14:15:04,156 - INFO - 
 Dataset: PRINTS
 - Columnas: ['day', 'user_id', 'event_data.position', 'event_data.value_prop']
 - Registros: 508617
-- Tiempo de carga: 3.47 seg
+- Tiempo de carga: 3.42 seg
 
-2025-04-08 10:24:46,353 - INFO - 
+2025-04-08 14:15:04,446 - INFO - 
 Dataset: TAPS
 - Columnas: ['day', 'user_id', 'event_data.position', 'event_data.value_prop']
 - Registros: 50859
-- Tiempo de carga: 0.28 seg
+- Tiempo de carga: 0.29 seg
 
-2025-04-08 10:24:47,553 - INFO - 
+2025-04-08 14:15:05,603 - INFO - 
 Dataset: PAYS
 - Columnas: ['pay_date', 'total', 'user_id', 'value_prop']
 - Registros: 756483
-- Tiempo de carga: 1.20 seg
+- Tiempo de carga: 1.16 seg
 
-2025-04-08 10:24:47,554 - INFO - Resumen general de carga de datos:
-2025-04-08 10:24:47,554 - INFO - PRINTS: 508617 filas | 4 columnas
-2025-04-08 10:24:47,557 - INFO - TAPS:   50859 filas | 4 columnas
-2025-04-08 10:24:47,557 - INFO - PAYS:   756483 filas | 4 columnas
-2025-04-08 10:24:47,557 - INFO - Carga de datos completada.
+2025-04-08 14:15:05,604 - INFO - Resumen general de carga de datos:
+2025-04-08 14:15:05,604 - INFO - PRINTS: 508617 filas | 4 columnas
+2025-04-08 14:15:05,605 - INFO - TAPS:   50859 filas | 4 columnas
+2025-04-08 14:15:05,605 - INFO - PAYS:   756483 filas | 4 columnas
+2025-04-08 14:15:05,605 - INFO - Carga de datos completada.
+2025-04-08 14:15:06,075 - INFO - Tiempo de preprocesamiento de PRINTS: 0:00:00.469311
+2025-04-08 14:15:06,123 - INFO - Tiempo de preprocesamiento de TAPS: 0:00:00.048024
+2025-04-08 14:15:06,603 - INFO - Tiempo de preprocesamiento de PAYS: 0:00:00.479487
+2025-04-08 14:15:06,639 - INFO - Preprocesamiento de datos completado.
