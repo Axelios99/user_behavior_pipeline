@@ -127,86 +127,87 @@ def preprocess_data(prints: pd.DataFrame, taps: pd.DataFrame, pays: pd.DataFrame
 
     return prints, taps, pays
 
-def build_dataset_enrich(df_prints: pd.DataFrame, df_taps: pd.DataFrame, df_pays: pd.DataFrame, pipeline_logger: logging.Logger) -> pd.DataFrame:
-    
-    start = time()
-    #Fecha mas reciente en prints
-    last_day_print = df_prints['day'].max()
-    #Fecha del dia de inicio de la ultima semana.
-    date_init_last_week = last_day_print - pd.Timedelta(days=DAYS_WEEK_WINDOW_DAYS)
+def build_dataset_enrich(
+    df_prints: pd.DataFrame,
+    df_taps: pd.DataFrame,
+    df_pays: pd.DataFrame,
+    pipeline_logger: logging.Logger
+) -> pd.DataFrame:
+    """
+    Enriquecimiento optimizado del dataset de prints con métricas históricas, usando operaciones groupby.
 
-    #Extraemos el dataset de la ultima semana (prints).
+    Parámetros:
+    - df_prints: DataFrame con historial de prints
+    - df_taps: DataFrame con historial de taps
+    - df_pays: DataFrame con historial de pagos
+    - pipeline_logger: Logger para registrar información del proceso
+
+    Retorna:
+    - DataFrame enriquecido
+    """
+
+    start = time()
+
+    # Calcular fechas clave
+    last_day = df_prints['day'].max()
+    date_init_last_week = last_day - pd.Timedelta(days=DAYS_WEEK_WINDOW_DAYS)
+    date_init_historical = date_init_last_week - pd.Timedelta(days=HISTORICAL_WINDOW_DAYS)
+
+    pipeline_logger.info(f"Último día disponible: {last_day}")
+    pipeline_logger.info(f"Ventana de última semana: {date_init_last_week.date()} → {last_day.date()}")
+    pipeline_logger.info(f"Ventana histórica: {date_init_historical.date()} → {(date_init_last_week - pd.Timedelta(days=1)).date()}")
+
+    # 1. Obtener los prints de la última semana (target del modelo)
     df_prints_last_week = df_prints[
-        df_prints['day'].between(date_init_last_week, last_day_print)
+        df_prints['day'].between(date_init_last_week, last_day)
     ].copy()
 
-    # Aplicamos enrich_print_row fila por fila al DataFrame filtrado
-    df_enriched = df_prints_last_week.copy()
-
-    #Pasamos cada fila 1 a 1 (apply) a la funcion enrich_print_row y la unión se hace mediante indice.
-    df_enriched = df_enriched.join(
-        df_enriched.apply(lambda row: enrich_print_row(row, df_prints, df_taps, df_pays), axis=1)
-    )
-
-    duration = time() - start
-    pipeline_logger.info(f"Tiempo de enrequecimiento de data: {timedelta(seconds=duration)}")
-
-    return df_enriched
-
-
-def enrich_print_row(row, df_prints, df_taps, df_pays) -> pd.Series:
-    # Extraer los datos clave de la fila actual de prints
-    user_id = row['user_id']
-    value_prop = row['value_prop']
-    print_day = row['day']  # Fecha del print actual
-
-    # Definir la ventana de análisis: 3 semanas antes del print (excluyendo el mismo día)
-    window_start = print_day - pd.Timedelta(days=HISTORICAL_WINDOW_DAYS)  # Día inicial del rango histórico
-    window_end = print_day - pd.Timedelta(days=1)     # Día final del rango histórico
-
-    # 1. Saber si el usuario hizo click (tap) ese mismo día en esa value_prop
-    clicked = df_taps[
-        (df_taps['user_id'] == user_id) &
-        (df_taps['value_prop'] == value_prop) &
-        (df_taps['day'] == print_day)
-    ].shape[0] > 0  # Si hay al menos 1 fila, hubo tap ese día
-
-    # 2. Contar cuántas veces el usuario vio esa value_prop en los 21 días anteriores
-    past_prints_count = df_prints[
-        (df_prints['user_id'] == user_id) &
-        (df_prints['value_prop'] == value_prop) &
-        (df_prints['day'].between(window_start, window_end))
-    ].shape[0]
-
-    # 3. Contar cuántas veces el usuario clickeó (tap) esa value_prop en ese mismo rango
-
-    past_taps_count = df_taps[
-        (df_taps['user_id'] == user_id) &
-        (df_taps['value_prop'] == value_prop) &
-        (df_taps['day'].between(window_start, window_end))
-    ].shape[0]
-
-    # 4. Filtrar pagos hechos por el usuario en esa value_prop durante ese rango
-
-    past_pays = df_pays[
-        (df_pays['user_id'] == user_id) &
-        (df_pays['value_prop'] == value_prop) &
-        (df_pays['pay_date'].between(window_start, window_end))
+    # 2. Filtrar datos históricos para métricas agregadas
+    historical_prints = df_prints[
+        df_prints['day'].between(date_init_historical, date_init_last_week - pd.Timedelta(days=1))
+    ]
+    historical_taps = df_taps[
+        df_taps['day'].between(date_init_historical, date_init_last_week - pd.Timedelta(days=1))
+    ]
+    historical_pays = df_pays[
+        df_pays['pay_date'].between(date_init_historical, date_init_last_week - pd.Timedelta(days=1))
     ]
 
-    # 4.a Contar cuántos pagos hizo en esa value_prop en el rango
-    past_pays_count = past_pays.shape[0]
+    # 3. Calcular métricas históricas (cuenta cuantas veces se vio cada value_prop por user_id y value_prop)), para pays tambien suma su valor.
 
-    # 4.b Sumar cuánto gastó en total en esos pagos
-    past_total_amount = past_pays['total'].sum()
+    # 3.1 Agrupa historical_prints por user_id y value_prop y cuenta cuantas veces se vio cada value_prop en las 3 semanas previas (resultado: df con user_id, value_prop y past_prints_count).
+    prints_count = historical_prints.groupby(['user_id', 'value_prop']).size().reset_index(name='past_prints_count')
+    # 3.2 Agrupa historical_taps por user_id y value_prop y cuenta cuantas veces se vio cada value_prop en las 3 semanas previas (resultado: df con user_id, value_prop y past_taps_count).
+    taps_count = historical_taps.groupby(['user_id', 'value_prop']).size().reset_index(name='past_taps_count')
+    # 3.3 Agrupa historical_pays por user_id y value_prop y agrega la cantidad de pagos que realizo, asi como el total del valor de los pagos.
+    pays_count = historical_pays.groupby(['user_id', 'value_prop']).agg(
+        past_pays_count=('pay_date', 'count'),
+        past_total_amount=('total', 'sum')
+    ).reset_index()
 
+    # 4. Detectar si hubo tap el mismo día del print (clicked)
+    taps_same_day = df_taps[['user_id', 'value_prop', 'day']].copy()
+    taps_same_day['clicked'] = 1
 
-    # 5. Devolver todas las métricas en una serie para agregarlas al DataFrame original
+    # 5. Realizar merges para enriquecer el dataset de prints de la última semana
+    df_enriched = df_prints_last_week.merge(
+        taps_same_day, on=['user_id', 'value_prop', 'day'], how='left'
+    ).merge(
+        prints_count, on=['user_id', 'value_prop'], how='left'
+    ).merge(
+        taps_count, on=['user_id', 'value_prop'], how='left'
+    ).merge(
+        pays_count, on=['user_id', 'value_prop'], how='left'
+    )
 
-    return pd.Series({
-        'clicked': int(clicked),  # Convertimos True/False a 1/0
-        'past_prints_count': past_prints_count,
-        'past_taps_count': past_taps_count,
-        'past_pays_count': past_pays_count,
-        'past_total_amount': past_total_amount
-    })
+    # 6. Rellenar valores nulos con ceros donde no hay historial previo
+    df_enriched['clicked'] = df_enriched['clicked'].fillna(0).astype(int)
+    df_enriched['past_prints_count'] = df_enriched['past_prints_count'].fillna(0).astype(int)
+    df_enriched['past_taps_count'] = df_enriched['past_taps_count'].fillna(0).astype(int)
+    df_enriched['past_pays_count'] = df_enriched['past_pays_count'].fillna(0).astype(int)
+    df_enriched['past_total_amount'] = df_enriched['past_total_amount'].fillna(0.0)
+
+    duration = time() - start
+    pipeline_logger.info(f"Enriquecimiento finalizado en: {timedelta(seconds=duration)}")
+
+    return df_enriched

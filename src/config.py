@@ -19,8 +19,8 @@ TAPS_LOG = LOG_PATH / "taps_load_errors.log"
 PAYS_LOG = LOG_PATH / "pays_load_errors.log"
 
 # Ventanas de tiempo para el modelo
-DAYS_WEEK_WINDOW_DAYS = 6
-HISTORICAL_WINDOW_DAYS = 21
+DAYS_WEEK_WINDOW_DAYS = 6 # Última semana → 7 días (día actual + 6 días atrás)
+HISTORICAL_WINDOW_DAYS = 21 # Historial → 3 semanas hacia atrás desde el inicio de esa última semana
 
 # Output
 ENRICH_DATA = OUTPUT_PATH / "data_enrich.csv"
